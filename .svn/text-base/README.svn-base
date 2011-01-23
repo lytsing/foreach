@@ -1,0 +1,17 @@
+This is a command for shell.
+
+* How to use ? *
+
+the simple:
+
+$ foreach -n 20 "echo hello"
+
+if use ruby to write, it will like this:
+$ 20.times {puts "hello"}
+
+Support parmeter
+
+ex.
+
+$ cat iplist | foreach -w 20 "sshscp.pl -p 1949 -r #1 -c 'md5sum '"
+

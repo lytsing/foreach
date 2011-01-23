@@ -1,0 +1,4 @@
+bin_PROGRAMS=foreach
+foreach_SOURCES=foreach.cpp
+foreach_CXXFLAGS=-g -Wall
+

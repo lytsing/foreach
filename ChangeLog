@@ -1,0 +1,5 @@
+2008-12-13 Liqing Huang <hlqing@gmail.com>
+	* src/subst.cpp: support parameter from pipe 
+2009-5-3   Liqing Huang <hlqing@gmail.com>
+	* use cmake build Makefile
+
