@@ -23,6 +23,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
