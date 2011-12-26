@@ -57,7 +57,7 @@ static vector<string> split(const string& str)
     return ret;
 }
 
-static int stoi(string str)
+static int stoi(const string& str)
 {
     int ret;
     // NOTE: You should probably do some checks to ensure that
@@ -110,3 +110,4 @@ int main(int argc, char *argv[])
 }
 
 #endif
+
