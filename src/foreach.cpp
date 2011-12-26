@@ -22,7 +22,7 @@
      __                          _     
     / _|                        | |    
    | |_ ___  _ __ ___  __ _  ___| |__  
-   |  _/ _ \| '__/ _ \/ _` |/ __| '_ \ 
+   |  _/ _ \| '__/ _ \/ _` |/ __| '_ \
    | || (_) | | |  __/ (_| | (__| | | |
    |_| \___/|_|  \___|\__,_|\___|_| |_|
 
@@ -32,6 +32,7 @@
 #include <iostream>
 #include <string>
 #include <getopt.h>
+#include <cstdio>
 #include <cstdlib>
 #include <climits>
 #include <unistd.h>
@@ -39,11 +40,18 @@
 
 using namespace std;
 
-#define  BUFSZ PIPE_BUF
+/*  ------------------- DEFINITIONS -------------------------- */
+
+#define BUFSZ PIPE_BUF
+#define MAX_CONCURRENCY 20000
 
 static void print_help(const char* progname);
 
-const char* VERSION = "0.0.1";  // FIXME
+/* simple little function to write an error string and exit */
+static void err(const char* s) {
+    fprintf(stderr, "%s\n", s);
+    exit(EXIT_FAILURE);
+}
 
 const struct option long_options[] = {
     { "count", 1, NULL, 'c' },
@@ -56,11 +64,15 @@ const struct option long_options[] = {
 
 const char short_options[] = "c:n:t:hv";
 
+const char* VERSION = "0.0.1";  // Version of foreach
+
+/*  --------------------- GLOBALS ---------------------------- */
+int requests = 1;       // Number of requests to make
+int concurrency = 1;    // Number of multiple requests to make
+
 int main(int argc, char *argv[]) {
     int ret;
     char* cmd = NULL;
-    int repeat_num = 1;  // default
-    int thread_num = 1;  // default
     char buf[BUFSZ];
     int fd;
     int len;
@@ -81,10 +93,13 @@ int main(int argc, char *argv[]) {
 
         switch (ret) {
             case 'n':
-                repeat_num = atoi(optarg);
+                requests = atoi(optarg);
+                if (requests <= 0) {
+                    err("Invalid number of requests\n");
+                }
                 break;
             case 'c':
-                thread_num = atoi(optarg);
+                concurrency = atoi(optarg);
                 break;
             case 'v':
                 cout << "foreach " << VERSION << endl;
@@ -92,13 +107,23 @@ int main(int argc, char *argv[]) {
             case '?':
             default:
                 print_help(argv[0]);
-                return -1;
         }
     }
 
     if (optind >= argc) {
         print_help(argv[0]);
-        return -2;
+    }
+
+    if ((concurrency < 0) || (concurrency > MAX_CONCURRENCY)) {
+        fprintf(stderr, "%s: Invalid Concurrency [Range 0..%d]\n",
+                argv[0], MAX_CONCURRENCY);
+        print_help(argv[0]);
+    }
+
+    if (concurrency > requests) {
+        fprintf(stderr, "%s: Cannot use concurrency level greater than "
+                "total number of requests\n", argv[0]);
+        print_help(argv[0]);
     }
 
     fd = dup(STDIN_FILENO);
@@ -108,9 +133,9 @@ int main(int argc, char *argv[]) {
     while (optind < argc) {
         cmd = argv[optind++];
 
-        if (repeat_num >= 1) {
+        if (requests >= 1) {
             int retval = 0;
-            for (int i = 0; i < repeat_num; ++i) {
+            for (int i = 0; i < requests; ++i) {
                 if (len == 0) {
                     retval = system(cmd);
                 } else {
@@ -139,9 +164,11 @@ int main(int argc, char *argv[]) {
 static void print_help(const char* progname) {
     cout << "Usage: " << progname << " [options] [CMD]\n";
     cout << "Options are:\n";
-    cout << "  -n,  --count=num     Number of requests to perform\n";
-    cout << "  -c,  --thread=count  Number of multiple requests to make\n";
+    cout << "  -n,  --requests=n    Number of requests to perform\n";
+    cout << "  -c,  --concurrency=n Number of multiple requests to make\n";
     cout << "  -v,  --version       Show the version of the foreach and exit\n";
     cout << "  -h,  --help          Display usage information (this message)" << endl;
+
+    exit(EXIT_FAILURE);
 }
 
