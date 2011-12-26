@@ -30,6 +30,7 @@
                      -- Dave Thomas */
 
 #include <iostream>
+#include <string>
 #include <getopt.h>
 #include <cstdlib>
 #include <climits>
@@ -40,9 +41,9 @@ using namespace std;
 
 #define  BUFSZ PIPE_BUF
 
-void print_help();
+static void print_help(const char* progname);
 
-const char* VERSION = "0.0.1"; //FIXME
+const char* VERSION = "0.0.1";  // FIXME
 
 const struct option long_options[] = {
     { "count", 1, NULL, 'c' },
@@ -55,12 +56,11 @@ const struct option long_options[] = {
 
 const char short_options[] = "c:n:t:hv";
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     int ret;
     char* cmd = NULL;
-    int repeat_num = 1; // default
-    int thread_num = 1; // default
+    int repeat_num = 1;  // default
+    int thread_num = 1;  // default
     char buf[BUFSZ];
     int fd;
     int len;
@@ -70,15 +70,15 @@ int main(int argc, char *argv[])
         cout << "Try `foreach --help' for more information." << endl;
         return -1;
     }
-    
+
     while (true) {
         int option_index = 0;
 
         ret = getopt_long(argc, argv, short_options,
                           long_options, &option_index);
-        
+
         if (ret == -1) break;
-        
+
         switch (ret) {
             case 'n':
                 repeat_num = atoi(optarg);
@@ -91,19 +91,19 @@ int main(int argc, char *argv[])
                 return 0;
             case '?':
             default:
-                print_help();
+                print_help(argv[0]);
                 return -1;
         }
     }
 
     if (optind >= argc) {
-        print_help();
+        print_help(argv[0]);
         return -2;
     }
 
     fd = dup(STDIN_FILENO);
     len = read(fd, buf, BUFSZ);
-    cout << "len == " << len << endl;
+    // cout << "len == " << len << endl;
 
     while (optind < argc) {
         cmd = argv[optind++];
@@ -111,9 +111,9 @@ int main(int argc, char *argv[])
         if (repeat_num >= 1) {
             int retval = 0;
             for (int i = 0; i < repeat_num; ++i) {
-                if (len == 0)
+                if (len == 0) {
                     retval = system(cmd);
-                else {
+                } else {
                     string in(buf);
                     // XXX: name have problem.
                     string out(cmd);
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
                     cerr << "system\n";
                 else if (retval != 0)
                     cerr << "no cmd input\n";
-            } 
+            }
         }
     }
 
@@ -136,14 +136,12 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void print_help()
-{
-    cout << "foreach : A script surporting multi-thread repeat execute some command\n";
-    cout << "Usage: foreach [options]... [CMD]\n";
-    cout << "Optons:\n";
-    cout << "  -n,  --count=num     Set the number to repeat\n";
-    cout << "  -c,  --thread=count  Set the thread counter\n";
+static void print_help(const char* progname) {
+    cout << "Usage: " << progname << " [options] [CMD]\n";
+    cout << "Options are:\n";
+    cout << "  -n,  --count=num     Number of requests to perform\n";
+    cout << "  -c,  --thread=count  Number of multiple requests to make\n";
     cout << "  -v,  --version       Show the version of the foreach and exit\n";
-    cout << "  -h,  --help          Show the help" << endl;
+    cout << "  -h,  --help          Display usage information (this message)" << endl;
 }
 

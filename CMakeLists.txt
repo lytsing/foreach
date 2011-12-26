@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+
 PROJECT (foreach)
 
 SET(SRC src/foreach.cpp src/subst.cpp)

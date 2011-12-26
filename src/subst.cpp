@@ -27,18 +27,15 @@
 
 using namespace std;
 
-static bool space(char c)
-{
+static bool space(char c) {
     return isspace(c);
 }
 
-static bool not_space(char c)
-{
+static bool not_space(char c) {
     return !isspace(c);
 }
 
-static vector<string> split(const string& str)
-{
+static vector<string> split(const string& str) {
     typedef string::const_iterator iter;
     vector<string> ret;
 
@@ -57,8 +54,7 @@ static vector<string> split(const string& str)
     return ret;
 }
 
-static int stoi(const string& str)
-{
+static int stoi(const string& str) {
     int ret;
     // NOTE: You should probably do some checks to ensure that
     // this string contains only numbers. If the string is not
@@ -68,8 +64,7 @@ static int stoi(const string& str)
     return ret;
 }
 
-string subst(const string& in, const string& out)
-{
+string subst(const string& in, const string& out) {
     typedef vector<string>::const_iterator iter;
     vector<string> vecs1 = split(in);
     vector<string> vecs2 = split(out);
@@ -81,7 +76,7 @@ string subst(const string& in, const string& out)
 
     for (i = 0; i != vecs1.size(); ++i) {
         for (j = 0; j != vecs2.size(); ++j) {
-            if ((vecs2[j])[0] == '#' 
+            if ((vecs2[j])[0] == '#'
                 && i == (vector<string>::size_type)stoi(tmp.assign(
                         vecs2[j], 1, (vecs2[i]).size() -1)) -1) {
                 vecs2[j] = vecs1[i];
@@ -97,11 +92,10 @@ string subst(const string& in, const string& out)
 }
 
 #if 0
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     string str1("210.34.0.222 43 bbs.xmu.edu.cn");
     string str2("echo #3 #1 #2");
-    
+
     string str3 = subst(str1, str2);
 
     cout << str3 << endl;
