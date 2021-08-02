@@ -19,9 +19,9 @@
 */
 
 /*
-     __                          _     
-    / _|                        | |    
-   | |_ ___  _ __ ___  __ _  ___| |__  
+     __                          _
+    / _|                        | |
+   | |_ ___  _ __ ___  __ _  ___| |__
    |  _/ _ \| '__/ _ \/ _` |/ __| '_ \
    | || (_) | | |  __/ (_| | (__| | | |
    |_| \___/|_|  \___|\__,_|\___|_| |_|
@@ -36,6 +36,7 @@
 #include <cstdlib>
 #include <climits>
 #include <unistd.h>
+
 #include "subst.h"
 
 using namespace std;
@@ -54,12 +55,12 @@ static void err(const char* s) {
 }
 
 const struct option long_options[] = {
-    { "count", 1, NULL, 'c' },
-    { "number", 1, NULL, 'n' },
-    { "help", 0, NULL, 'h' },
-    { "timeout", 1, NULL, 't' },
-    { "version", 0, NULL, 'v' },
-    { NULL, 0, NULL, 0 }
+    { "count"   , 1 , NULL , 'c' } ,
+    { "number"  , 1 , NULL , 'n' } ,
+    { "help"    , 0 , NULL , 'h' } ,
+    { "timeout" , 1 , NULL , 't' } ,
+    { "version" , 0 , NULL , 'v' } ,
+    { NULL      , 0 , NULL , 0 }
 };
 
 const char short_options[] = "c:n:t:hv";

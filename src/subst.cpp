@@ -54,7 +54,7 @@ static vector<string> split(const string& str) {
     return ret;
 }
 
-static int stoi(const string& str) {
+static int mystoi(const string& str) {
     int ret;
     // NOTE: You should probably do some checks to ensure that
     // this string contains only numbers. If the string is not
@@ -77,7 +77,7 @@ string subst(const string& in, const string& out) {
     for (i = 0; i != vecs1.size(); ++i) {
         for (j = 0; j != vecs2.size(); ++j) {
             if ((vecs2[j])[0] == '#'
-                && i == (vector<string>::size_type)stoi(tmp.assign(
+                && i == (vector<string>::size_type)mystoi(tmp.assign(
                         vecs2[j], 1, (vecs2[i]).size() -1)) -1) {
                 vecs2[j] = vecs1[i];
             }
